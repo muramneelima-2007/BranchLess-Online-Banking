@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BranchLess – Online Banking System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Notification Toast Container -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <!-- Main Navigation / Header -->
+    <header class="app-header">
+        <div class="header-container">
+            <div class="brand">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor">
+                        <path d="M12 1L2 6v2h20V6L12 1zm-8 8v9h3v-9H4zm6 0v9h3v-9h-3zm6 0v9h3v-9h-3zM2 20v2h20v-2H2z"/>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <h1>BranchLess</h1>
+                    <span class="sub-brand">Online Banking System</span>
+                </div>
+            </div>
+
+            <!-- Header User Profile & Logout (hidden when logged out) -->
+            <div id="header-user-actions" class="header-user-actions hidden">
+                <div class="user-greeting">
+                    <span class="greeting-label">Welcome,</span>
+                    <strong id="header-user-name" class="greeting-name">Customer</strong>
+                </div>
+                <button id="btn-logout" class="btn btn-outline-danger" title="Logout">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                        <path d="M16 13v-2H7V8l-5 4 5 4v-3h9zM20 3h-9c-1.1 0-2 .9-2 2v4h2V5h9v14h-9v-4H9v4c0 1.1.9 2 2 2h9c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+                    </svg>
+                    Logout
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main App Container -->
+    <main class="app-main">
+
+        <!-- ==================== AUTHENTICATION SECTION ==================== -->
+        <section id="auth-section" class="auth-section">
+            <div class="auth-card">
+                
+                <!-- Auth Tabs -->
+                <div class="auth-tabs">
+                    <button id="tab-login" class="tab-btn active" type="button">Login</button>
+                    <button id="tab-register" class="tab-btn" type="button">Register</button>
+                </div>
+
+                <!-- Alert Message Box in Auth -->
+                <div id="auth-alert" class="alert-box hidden"></div>
+
+                <!-- Login Form -->
+                <form id="form-login" class="auth-form" novalidate>
+                    <h2 class="form-title">Customer Login</h2>
+                    <p class="form-subtitle">Access your branchless banking account securely</p>
+
+                    <div class="form-group">
+                        <label for="login-email">Email Address</label>
+                        <input type="email" id="login-email" placeholder="e.g. john@example.com" required autocomplete="email">
+                        <span class="input-error" id="err-login-email"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" placeholder="Enter your password" required autocomplete="current-password">
+                        <span class="input-error" id="err-login-password"></span>
+                    </div>
+
+                    <button type="submit" id="btn-login-submit" class="btn btn-primary btn-block">
+                        Sign In to Account
+                    </button>
+
+                    <div class="form-footer">
+                        <span>New to BranchLess?</span>
+                        <a href="javascript:void(0)" id="link-go-to-register">Create a new account</a>
+                    </div>
+                </form>
+
+                <!-- Registration Form -->
+                <form id="form-register" class="auth-form hidden" novalidate>
+                    <h2 class="form-title">New Registration</h2>
+                    <p class="form-subtitle">Join BranchLess banking in a few simple steps</p>
+
+                    <div class="form-group">
+                        <label for="reg-name">Full Name</label>
+                        <input type="text" id="reg-name" placeholder="e.g. John Doe" required autocomplete="name">
+                        <span class="input-error" id="err-reg-name"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-email">Email Address</label>
+                        <input type="email" id="reg-email" placeholder="e.g. john@example.com" required autocomplete="email">
+                        <span class="input-error" id="err-reg-email"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-password">Password</label>
+                        <input type="password" id="reg-password" placeholder="Create a strong password" required autocomplete="new-password">
+                        <span class="input-error" id="err-reg-password"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-phone">Phone Number</label>
+                        <input type="tel" id="reg-phone" placeholder="e.g. 9876543210" required autocomplete="tel">
+                        <span class="input-error" id="err-reg-phone"></span>
+                    </div>
+
+                    <button type="submit" id="btn-register-submit" class="btn btn-primary btn-block">
+                        Register Customer
+                    </button>
+
+                    <div class="form-footer">
+                        <span>Already registered?</span>
+                        <a href="javascript:void(0)" id="link-go-to-login">Sign in here</a>
+                    </div>
+                </form>
+
+            </div>
+        </section>
+
+
+        <!-- ==================== DASHBOARD SECTION ==================== -->
+        <section id="dashboard-section" class="dashboard-section hidden">
+
+            <!-- Profile & Account Selector Banner -->
+            <div class="card customer-banner">
+                <div class="customer-info-wrap">
+                    <div class="customer-avatar">
+                        <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                    </div>
+                    <div class="customer-details">
+                        <h2 id="dash-customer-name" class="customer-name">Customer Name</h2>
+                        <div class="customer-meta">
+                            <span class="meta-item">
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                                <span id="dash-customer-email">email@example.com</span>
+                            </span>
+                            <span class="meta-item">
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                                <span id="dash-customer-phone">9876543210</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="account-picker-wrap">
+                    <label for="account-select" class="selector-label">Active Bank Account:</label>
+                    <div class="selector-row">
+                        <select id="account-select" class="account-select"></select>
+                        <button id="btn-open-account-modal" class="btn btn-secondary btn-sm" title="Open an additional bank account">
+                            + Open Account
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- "No Account" Alert Card (Visible only when customer has 0 accounts) -->
+            <div id="no-account-card" class="card empty-account-card hidden">
+                <div class="empty-icon">🏦</div>
+                <h3>No Bank Account Found</h3>
+                <p>You have registered successfully! Create your first bank account to start depositing, withdrawing, and transferring money.</p>
+                <button id="btn-create-first-account" class="btn btn-primary">Open Savings Account Now</button>
+            </div>
+
+            <!-- Active Account Details Card -->
+            <div id="active-account-card" class="card account-card">
+                <div class="account-card-header">
+                    <div class="account-title-group">
+                        <span class="eyebrow-text">Primary Account</span>
+                        <div class="account-num-row">
+                            <span class="account-num-label">A/C No:</span>
+                            <strong id="dash-account-number" class="account-num">----------</strong>
+                        </div>
+                    </div>
+                    <div class="account-badges">
+                        <span id="dash-account-type" class="badge badge-type">SAVINGS</span>
+                        <span id="dash-account-status" class="badge badge-status">ACTIVE</span>
+                    </div>
+                </div>
+
+                <div class="account-card-body">
+                    <div class="balance-display">
+                        <span class="balance-label">Available Balance</span>
+                        <div class="balance-amount-wrap">
+                            <span class="currency-symbol">$</span>
+                            <span id="dash-account-balance" class="balance-value">0.00</span>
+                        </div>
+                    </div>
+
+                    <button id="btn-refresh-dashboard" class="btn btn-outline btn-refresh" title="Refresh balance and transactions">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                        </svg>
+                        Refresh Data
+                    </button>
+                </div>
+            </div>
+
+            <!-- Banking Operations Grid -->
+            <div id="operations-section" class="operations-grid">
+                
+                <!-- Operation 1: Deposit -->
+                <div class="card operation-card">
+                    <div class="operation-header">
+                        <div class="operation-icon deposit-icon">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3>Deposit Funds</h3>
+                            <p class="card-desc">Add funds to your account</p>
+                        </div>
+                    </div>
+                    <form id="form-deposit" class="operation-form" novalidate>
+                        <div class="form-group">
+                            <label for="deposit-amount">Amount ($)</label>
+                            <input type="number" id="deposit-amount" placeholder="e.g. 500.00" min="0.01" step="0.01" required>
+                        </div>
+                        <button type="submit" id="btn-deposit-submit" class="btn btn-success btn-block">
+                            Deposit Money
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Operation 2: Withdraw -->
+                <div class="card operation-card">
+                    <div class="operation-header">
+                        <div class="operation-icon withdraw-icon">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                                <path d="M19 13H5v-2h14v2z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3>Withdraw Funds</h3>
+                            <p class="card-desc">Withdraw money from your balance</p>
+                        </div>
+                    </div>
+                    <form id="form-withdraw" class="operation-form" novalidate>
+                        <div class="form-group">
+                            <label for="withdraw-amount">Amount ($)</label>
+                            <input type="number" id="withdraw-amount" placeholder="e.g. 150.00" min="0.01" step="0.01" required>
+                        </div>
+                        <button type="submit" id="btn-withdraw-submit" class="btn btn-warning btn-block">
+                            Withdraw Money
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Operation 3: Transfer -->
+                <div class="card operation-card">
+                    <div class="operation-header">
+                        <div class="operation-icon transfer-icon">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                                <path d="M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3>Transfer Money</h3>
+                            <p class="card-desc">Send funds to another account</p>
+                        </div>
+                    </div>
+                    <form id="form-transfer" class="operation-form" novalidate>
+                        <div class="form-group">
+                            <label for="transfer-dest">Destination Account Number</label>
+                            <input type="text" id="transfer-dest" placeholder="e.g. 1083921745" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="transfer-amount">Amount ($)</label>
+                            <input type="number" id="transfer-amount" placeholder="e.g. 250.00" min="0.01" step="0.01" required>
+                        </div>
+                        <button type="submit" id="btn-transfer-submit" class="btn btn-primary btn-block">
+                            Transfer Funds
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+
+            <!-- Transaction History Section -->
+            <div id="transactions-section" class="card transactions-card">
+                <div class="transactions-header">
+                    <div class="trans-title-wrap">
+                        <h3>Transaction History</h3>
+                        <span id="trans-count" class="badge badge-count">0 Records</span>
+                    </div>
+                    <button id="btn-refresh-transactions" class="btn btn-outline btn-sm">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                        </svg>
+                        Refresh
+                    </button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="transactions-table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Source Account</th>
+                                <th>Destination Account</th>
+                                <th>Date & Time</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactions-tbody">
+                            <tr>
+                                <td colspan="6" class="table-empty">Loading transactions...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Modal for Opening an Additional Account -->
+    <div id="modal-open-account" class="modal-backdrop hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Open Bank Account</h3>
+                <button id="btn-modal-close" class="btn-close">&times;</button>
+            </div>
+            <form id="form-open-account">
+                <div class="form-group">
+                    <label for="new-account-type">Select Account Type</label>
+                    <select id="new-account-type" class="account-select">
+                        <option value="SAVINGS" selected>Savings Account</option>
+                        <option value="CHECKING">Checking Account</option>
+                        <option value="CURRENT">Current Account</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btn-modal-cancel" class="btn btn-outline">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Account</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- App Footer -->
+    <footer class="app-footer">
+        <p>&copy; 2026 BranchLess – Online Banking System. Built with Spring Boot &amp; MySQL.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
